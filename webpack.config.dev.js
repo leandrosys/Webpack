@@ -3,6 +3,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
 const Dotenv = require('dotenv-webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 
 module.exports = {
     entry: './src/index.js', // App entry point
@@ -12,7 +14,8 @@ module.exports = {
         assetModuleFilename: 'assets/images/[hash][ext][query]' //folder to images
     },
     mode: 'development', //allow indicate it file is development mode
-    watch: true, // turn on watch mode for seeing the change that we do in the project and so, we can see immediately them without compiler again
+    devtool: 'source-map', //generate a file with map of our application
+    //watch: true, // turn on watch mode for seeing the change that we do in the project and so, we can see immediately them without compiler again
     resolve: {
         extensions: ['.js'], //what kind extension we'll use into project
         alias: { //allow work with alias into other files, and u won't use all path in the other files
@@ -77,5 +80,13 @@ module.exports = {
             ]
         }),
         new Dotenv(),
-    ]
+        new BundleAnalyzerPlugin(),
+        new CleanWebpackPlugin(), // use clean plugin to dist folder is ready to upload to production
+    ],
+    devServer: { //confi abut dev server
+        contentBase: path.join(__dirname,'dist'),
+        compress: true,
+        historyApiFallback: true,
+        port: 3006,
+    },
 }
